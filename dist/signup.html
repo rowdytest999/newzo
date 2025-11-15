@@ -11,6 +11,13 @@
     <div class="brand">Newzo</div>
     <nav>
       <a href="index.html">Home</a>
+      <a href="create.html" id="createLink" style="display:none">Create</a>
+      <a href="wallet.html" id="walletLink" style="display:none">Wallet</a>
+      <a href="admin.html" id="adminLink" style="display:none">Admin</a>
+      <div class="nav-actions">
+        <a href="login.html" id="authLink" class="btn small">Login</a>
+        <a href="signup.html" id="signupBtn" class="btn alt small">Sign Up</a>
+      </div>
     </nav>
   </header>
 
@@ -38,6 +45,32 @@
   <script src="assets/js/firebase-config.js"></script>
   <script>
     const status = document.getElementById("status");
+
+    // update header auth buttons based on state
+    firebase.auth().onAuthStateChanged(user => {
+      const authLink = document.getElementById("authLink");
+      const signupBtn = document.getElementById("signupBtn");
+      if (user) {
+        authLink.textContent = "Logout";
+        authLink.href = "#";
+        authLink.onclick = () => firebase.auth().signOut();
+        signupBtn.style.display = "none";
+        document.getElementById("createLink").style.display = "inline-block";
+        document.getElementById("walletLink").style.display = "inline-block";
+        if (user.email === "adminsingh123@gmail.com") {
+          document.getElementById("adminLink").style.display = "inline-block";
+        }
+      } else {
+        authLink.textContent = "Login";
+        authLink.href = "login.html";
+        authLink.onclick = null;
+        signupBtn.style.display = "inline-block";
+        document.getElementById("createLink").style.display = "none";
+        document.getElementById("walletLink").style.display = "none";
+        document.getElementById("adminLink").style.display = "none";
+      }
+    });
+
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("email").value;
