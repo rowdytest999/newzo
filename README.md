@@ -1,2 +1,0 @@
-# Newzo
-Share and earn
